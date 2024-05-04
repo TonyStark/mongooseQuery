@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mongoose Query Send</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+  <section class="container mx-auto" id="mngos">
+    <h1 class="text-4xl font-bold">Mongoose Query Execute</h1>
+    <form action="/" method="post" class="">
+      <input style="font-size: 18px;width: 90%; padding: 10px 0px;" value="" autocomplete="on" name="mnQuery" placeholder="Enter Query" type="text" class="">
+      <button style="width: 50px; background-color: lightgreen; padding: 10px 0;" id="hitQuery" type="button" class=""> Send </button>
+
+    </form>
+
+    <textarea autocomplete="off" style="font-size: 18px;width: 90%; margin-top: 20px;" placeholder="Result will display here" id="outQuery" rows="20" class=""></textarea>
+    
+  </section>
+  <script>
+    $(document).ready(function(){
+      $("input[name=mnQuery]").keypress(function(event) {
+        if (event.which === 13) {
+          event.preventDefault();
+          $("#hitQuery").click(); 
+        }
+      });
+      $("#hitQuery").click(function(event) {
+        event.preventDefault(); 
+        const queryData = $("input[name=mnQuery]").val();
+
+        if (!queryData) {
+          alert("Please enter a query!");
+          return; 
+        }
+
+        $.ajax({
+          url: "/",
+          method: "POST",
+          data: { queryData },
+          dataType: "json",
+          success: function(response) {
+            let jsonString = JSON.stringify(response, null, 2);
+            $("#outQuery").html("")
+            
+            $("#outQuery").html(jsonString);
+            console.log("Success:", response);
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            $("#outQuery").html("")
+            console.error("Error:", textStatus, errorThrown);
+            $("#outQuery").html("Error: " + errorThrown);
+          }
+        });
+      });
+
+    })
+  </script>
+
+  
+</body>
+</html>
